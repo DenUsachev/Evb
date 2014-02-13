@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'Api',
     'django.contrib.admin',
-    'pony',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -50,19 +50,21 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'Easyvibe.urls'
-
 WSGI_APPLICATION = 'Easyvibe.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'default': {
+            'NAME':'easyvibe',
+            'ENGINE':'django.db.backends.mysql',
+            'HOST': '188.226.152.178',
+            'USER':'root',
+            'PASSWORD':'mysQlpass7'
+        }
 }
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

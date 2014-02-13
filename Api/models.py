@@ -1,89 +1,114 @@
-from datetime import datetime
-from pony.orm import *
-from datetime import datetime
-#from django.db import models
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Remove `managed = False` lines for those models you wish to give write DB access
+# Feel free to rename the models, but don't rename db_table values or field names.
+#
+# Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
+# into your database.
+from __future__ import unicode_literals
+from django.db import models
 
-# Create your models here.
+class Albums(models.Model):
+    id = models.IntegerField(primary_key=True)
+    author = models.CharField(max_length=300,null=False)
+    title = models.CharField(max_length=300,null=False)
+    class Meta:
+        managed = False
+        db_table = 'Albums'
 
-db = Database("mysql", host="easyvibe.cloudapp.net", user="EASYVIBE_DATA", passwd="123qwe", db="EASYVIBE_DATA")
+class Clients(models.Model):
+    id = models.IntegerField(primary_key=True)
+    access_token = models.CharField(max_length=255)
+    birthday = models.DateTimeField(blank=True, null=True)
+    age = models.IntegerField(blank=True,null=False, default=0)
+    created = models.DateTimeField(auto_now=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True)
+    fb_id = models.CharField(max_length=255, blank=True)
+    fb_token = models.CharField(max_length=255, blank=True)
+    gender = models.IntegerField(blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True)
+    vk_id = models.BigIntegerField(blank=True, null=True)
+    vk_token = models.CharField(max_length=255, blank=True)
+    picture = models.CharField(max_length=1000, blank=True)
+    lang = models.CharField(max_length=6, blank=True)
+    mutex = models.IntegerField()
+    class Meta:
+        managed = False
+        db_table = 'Clients'
 
-class Album(db.Entity):
-    nodeId = PrimaryKey(int, auto=True)
-    author = Required(str)
-    title = Required(str)
-#    song = Optional("Song")
+class Devices(models.Model):
+    id = models.IntegerField(primary_key=True)
+    token = models.CharField(max_length=255, blank=True)
+    type = models.IntegerField(blank=True, null=True)
+    last_send_date = models.DateTimeField(blank=True, null=True)
+    client = models.ForeignKey(Clients)
+    class Meta:
+        managed = False
+        db_table = 'Devices'
 
-class Song(db.Entity):
-    nodeId = PrimaryKey(int, auto=True)
-    author = Required(str)
-    genre = Optional(str)
-    title = Required(str)
-    year = Optional(str)
-    album_nodeId = Required(unicode)
-    #albums = Set(Album)
-    #users_in_songs = Set("UsersInSongs")
-    #recommendations = Set("Recommendation")
-    #listenings = Set("Listen")
+class Grants(models.Model):
+    # id = models.CharField(prymary_key=True)
+    id = models.IntegerField(primary_key=True)
+    owner = models.ForeignKey(Clients,related_name='fk_owner')
+    guest = models.ForeignKey(Clients,related_name='fk_guest')
+    created = models.DateTimeField(auto_now=True)
+    class Meta:
+        managed = False
+        db_table = 'Grants'
 
-class User(db.Entity):
-    nodeId = PrimaryKey(int, auto=True)
-    accessToken = Required(str, unique=True)
-    birthday = Optional(datetime)
-    createdAt = Required(datetime)
-    email = Optional(str)
-    facebookId = Optional(str)
-    fbAccessToken = Optional(str)
-    gender = Required(int, default=0)
-    name = Required(str, lazy=True)
-    age = Optional(int)
-    vkAccessToken = Optional(str)
-    vkId = Optional(int)
-    #users_in_songs = Set("UsersInSongs")
-    #devices = Set("Device")
-    #notifications = Set("Notification")
-    #recommendations = Set("Recommendation")
-    #listenings = Set("Listen")
+class Songs(models.Model):
+    author = models.CharField(max_length=200,null=False, blank=True)
+    genre = models.CharField(max_length=200,null=True, blank=True)
+    title = models.CharField(max_length=200,null=False, blank=True)
+    year = models.SmallIntegerField(null=True)
+    album = models.CharField(max_length=200,null=True, blank=True)
+    artwork = models.CharField(max_length=500,null=True, blank=True)
+    url = models.CharField(max_length=1000,null=True, blank=True)
+    itunes_url = models.CharField(max_length=1000, blank=True)
+    class Meta:
+        managed = False
+        db_table = 'Songs'
 
-#class UsersInSongs(db.Entity):
-#    #id = PrimaryKey(int, auto=True)
-#    song_id = Required(int)
-#    user_id = Required(int)
-#    #song = Required(Song)
-#    #user = Required(User)
+class Listen(models.Model):
+    created = models.DateTimeField(auto_now=True)
+    song_id = models.CharField(max_length=64)
+    client_id = models.IntegerField()
+    class Meta:
+        managed = False
+        db_table = 'Listen'
 
-class Device(db.Entity):
-    nodeId = PrimaryKey(int, auto=True)
-    deviceToken = Optional(str, unique=True)
-    deviceType = Optional(int)
-    lastSendDate = Optional(datetime)
-    user_nodeId = Required(int)
-    #user = Required(User)
+# class Notifications(models.Model):
+#     id = models.IntegerField(primary_key=True)
+#     sent = models.IntegerField()
+#     client_id = models.IntegerField(blank=True, null=True)
+#     delivered = models.DateTimeField()
+#     class Meta:
+#         managed = False
+#         db_table = 'Notifications'
+#
+# class Recommendations(models.Model):
+#     id = models.IntegerField(db_column='Id', primary_key=True) # Field name made lowercase.
+#     created = models.DateTimeField()
+#     updated = models.DateTimeField(blank=True, null=True)
+#     state = models.IntegerField(blank=True, null=True)
+#     creator_id = models.IntegerField()
+#     recepient_id = models.IntegerField()
+#     song_id = models.CharField(unique=True, max_length=64)
+#     is_read = models.IntegerField()
+#     class Meta:
+#         managed = False
+#         db_table = 'Recommendations'
 
-class Notification(db.Entity):
-    nodeId = PrimaryKey(int, auto=True)
-    locArgs = Optional(str)
-    lockKey = Optional(str)
-    sent = Required(int, default=0)
-    user_nodeId = Required(int)
-    #user = Required(User)
+#
+# class Usersinsongs(models.Model):
+#     id = models.CharField(primary_key=True, max_length=64)
+#     client_id = models.IntegerField()
+#     song_id = models.CharField(max_length=64)
+#     hash = models.CharField(max_length=100)
+#     class Meta:
+#         managed = False
+#         db_table = 'UsersInSongs'
 
-class Recommendation(db.Entity):
-    nodeId = PrimaryKey(int, auto=True)
-    createdAt = Required(datetime)
-    state = Required(int)
-    createdBy_nodeId = Required(int)
-    received_nodeId = Required(int)
-    song_nodeId = Required(int)
-    #user = Required(User)
-    #song = Required(Song)
-
-class Listen(db.Entity):
-    nodeId = PrimaryKey(int, auto=True)
-    createdAt = Required(datetime)
-    song_nodeId = Required(int)
-    user_nodeId = Required(int)
-    #song = Required(Song)
-    #user = Required(User)
-
-sql_debug(True)
-db.generate_mapping(create_tables=False)

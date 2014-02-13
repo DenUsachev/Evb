@@ -4,5 +4,4 @@ __author__ = 'Usachev'
 
 class UserSerializer(ModelSerializer):
     class Meta:
-        model = User
-        fields = ('name','gender','email','age','birthday','facebookId','vkId')
+        pass
